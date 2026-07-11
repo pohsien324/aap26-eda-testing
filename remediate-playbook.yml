@@ -1,0 +1,11 @@
+- name: EDA Handle Memory Issues
+  hosts: all
+  serial: 2
+  gather_facts: false
+  tasks:
+    - name: Dump the variables from EDA
+      ansible.builtin.debug:
+        msg: >-
+          AlertName: {{ alertname }},
+          Instance: {{ instance }},
+          OS Resource: {{ resource }}

@@ -1,9 +1,0 @@
-- name: EDA Trigger Job 1
-  hosts: all
-  serial: 2
-  gather_facts: false
-  tasks:
-  - name: Do somthing
-    ansible.builtin.debug:
-      msg: "This is Job 1"
-

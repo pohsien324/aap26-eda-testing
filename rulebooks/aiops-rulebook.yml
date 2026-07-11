@@ -1,0 +1,32 @@
+---
+- name: React to Grafana alerts
+  hosts: all
+  sources:
+    - name: From Grafana Webhook
+      ansible.eda.webhook:
+        host: 0.0.0.0
+        port: 5000
+      filters:
+        - ansible.eda.json_filter:
+            include_keys:
+              - status
+              - commonLabels
+              - alerts
+
+  rules:
+    - name: Firing alert triggers remediation
+      condition: event.payload.status == "firing" and  event.payload.commonLabels.alertname == "Memory Usage Threadshold"
+      throttle:
+        once_within: 5 minutes
+        group_by_attributes:
+        - event.payload.commonLabels.alertname
+        - event.payload.commonLabels.instance
+      action:
+        run_job_template:
+          name: "EDA Handle Memory Issues"
+          organization: "Red Hat"
+          job_args:
+            extra_vars:
+              alertname: "{{ event.payload.commonLabels.alertname }}"
+              instance: "{{ event.payload.commonLabels.instance }}"
+              resource: "{{ event.payload.commonLabels.resource }}"
