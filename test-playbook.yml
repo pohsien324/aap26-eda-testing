@@ -1,9 +1,9 @@
 - name: EDA Trigger Job 1
-  hosts: "{{ host_group | default(all) }}"
-  serial: "{{ node_count | default(1)}}"
+  hosts: all
+  serial: 2
   gather_facts: false
   tasks:
   - name: Do somthing
-    debug:
+    ansible.builtin.debug:
       msg: "This is Job 1"
 
